@@ -628,6 +628,62 @@ tr:nth-child(even) td { background: var(--bg3); }
   .mcq-controls { flex-direction: column; }
   .options { grid-template-columns: 1fr; }
 }
+
+/* ── SCROLL TO TOP ───────────────────────────────────────── */
+#scroll-top-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 28px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(91,141,238,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s, transform 0.25s, background 0.2s;
+}
+#scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+#scroll-top-btn:hover { background: var(--accent2); }
+
+/* ── SECTION B DIVIDER ───────────────────────────────────── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0 28px;
+}
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-divider-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(91,141,238,0.2);
+  padding: 5px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -1167,7 +1223,6 @@ tr:nth-child(even) td { background: var(--bg3); }
 
   <div id="submit-row" class="submit-row" style="display:none">
     <button class="btn-secondary" id="answered-count-btn" disabled></button>
-    <button class="btn-primary" onclick="submitQuiz()">Submit Quiz</button>
   </div>
 
 </div><!-- end tab-mcq -->
@@ -1530,6 +1585,362 @@ tr:nth-child(even) td { background: var(--bg3); }
     </div>
   </div>
 
+  <!-- ── SECTION B ─────────────────────────────────────── -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Section B — Exam Questions</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- WQ B1 -->
+  <div class="wq-card" id="wqb1">
+    <div class="wq-header" onclick="toggleWQ('wqb1')">
+      <div class="wq-num">B1</div>
+      <div class="wq-header-text"><h3>Asymmetric Cryptography, CIA Triad &amp; Caesar Cipher (k=13)</h3><p>SECTION B · 20 MARKS</p></div>
+      <div class="wq-chevron">▾</div>
+    </div>
+    <div class="wq-body">
+      <div class="wq-question">
+        <strong>(a)</strong> With the aid of a diagram, explain the concept of asymmetric cryptography and give two examples of asymmetric encryption algorithms. <em>(10 marks)</em><br><br>
+        <strong>(b)</strong> You have been appointed as the Lead Cybersecurity Analyst for a financial institution planning to revamp its information security practices. The CIO has tasked you with developing a comprehensive security strategy based on the CIA Triad.<br>
+        &nbsp;&nbsp;&nbsp;<strong>i.</strong> Explain the concept of the CIA Triad in computer and information security. <em>(5 marks)</em><br>
+        &nbsp;&nbsp;&nbsp;<strong>ii.</strong> Give one practical example of a specific situation in which each component of the CIA Triad could be breached in a financial institution. <em>(5 marks)</em><br><br>
+        <strong>(c)</strong> Consider a shift cipher (Caesar cipher) for the English alphabet using a key <strong>k = 13</strong>. Encrypt the following sentence:<br>
+        <em>"This exam is the best exams I have ever written under the invigilation of Dr Emmanuel Antwi Boasiako"</em><br>
+        Show all steps and clearly present your final ciphertext.
+      </div>
+      <div class="wq-hint">💡 <div><strong>Hint:</strong> For (a), think about two mathematically linked keys and how they are used in opposite roles. For (c), k=13 is ROT13 — each letter shifts 13 places mod 26 through the alphabet. Spaces and punctuation are left unchanged.</div></div>
+      <button class="reveal-btn" onclick="toggleSolution('wqb1-sol', this)">▶ Reveal Model Solution</button>
+      <div class="solution-box" id="wqb1-sol">
+        <div class="sol-label">Model Solution</div>
+        <pre><strong>(a) Asymmetric (Public-Key) Cryptography</strong>
+
+Definition:
+Asymmetric cryptography uses TWO mathematically related keys — a PUBLIC
+key and a PRIVATE key — generated as a matched pair. Data encrypted with
+the public key can ONLY be decrypted with the corresponding private key,
+and vice versa. The public key is freely shared; the private key is kept
+secret by its owner.
+
+Diagram:
+
+  Sender (Alice)                           Receiver (Bob)
+  ─────────────                            ─────────────
+  Plaintext ──► [Encrypt with Bob's     ──► Ciphertext ──► [Decrypt with Bob's  ──► Plaintext
+                 PUBLIC Key]                                 PRIVATE Key]
+
+  Key Generation (Bob):
+  ┌──────────────────────────────────────────────┐
+  │  Key Pair Generator                           │
+  │                                               │
+  │  Public Key  ──► Shared openly with anyone   │
+  │  Private Key ──► Kept secret by Bob only     │
+  └──────────────────────────────────────────────┘
+
+How it works:
+1. Bob generates a public/private key pair.
+2. Bob shares his PUBLIC key openly (anyone can see it).
+3. Alice encrypts her message using Bob's PUBLIC key.
+4. Only Bob's PRIVATE key can decrypt the ciphertext — nobody else can.
+
+Key Properties:
+• Computationally infeasible to derive the private key from the public key.
+• Solves the key distribution problem of symmetric cryptography.
+• Slower than symmetric encryption due to complex mathematical operations.
+
+Two Examples of Asymmetric Encryption Algorithms:
+1. RSA (Rivest–Shamir–Adleman): Security based on the difficulty of
+   factoring the product of two large prime numbers. Used in TLS/SSL,
+   digital signatures, and secure email.
+2. El Gamal: Security based on the Discrete Logarithm Problem (DLP) in
+   a finite group. Used in GPG/PGP encryption and as the basis for DSA
+   (Digital Signature Algorithm).
+
+
+<strong>(b.i) The CIA Triad</strong>
+
+The CIA Triad is the foundational model of information security, comprising
+three core principles that guide the protection of information assets:
+
+┌──────────────────────────────────────────────────────────────┐
+│                        CIA TRIAD                              │
+│                                                               │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
+│   │CONFIDENTIALITY│  │  INTEGRITY   │  │  AVAILABILITY    │  │
+│   │               │  │              │  │                  │  │
+│   │ Only authorised│  │ Data is      │  │ Systems and data │  │
+│   │ parties can   │  │ accurate and │  │ are accessible   │  │
+│   │ access data   │  │ unmodified   │  │ when needed      │  │
+│   └──────────────┘  └──────────────┘  └──────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+
+• CONFIDENTIALITY: Ensures that sensitive information is accessible only
+  to those authorised to view it. Techniques include encryption, access
+  controls, and data classification. Prevents unauthorised disclosure.
+
+• INTEGRITY: Ensures that data and systems remain accurate, complete, and
+  unaltered by unauthorised parties. Techniques include hashing, digital
+  signatures, and checksums. Protects against unauthorised modification.
+
+• AVAILABILITY: Ensures that information systems and data are operational
+  and accessible to authorised users whenever required. Techniques include
+  redundancy, backups, and DDoS mitigation. Prevents denial of service.
+
+
+<strong>(b.ii) CIA Triad Breach Examples in a Financial Institution</strong>
+
+• CONFIDENTIALITY Breach:
+  An attacker uses SQL injection to extract the customer database, exposing
+  thousands of account numbers, PINs, and personal details. Unauthorised
+  parties can now access private customer financial records.
+
+• INTEGRITY Breach:
+  A malicious insider modifies transaction records in the core banking
+  system to redirect funds into their own account. The financial data is
+  no longer accurate or trustworthy — its integrity has been violated.
+
+• AVAILABILITY Breach:
+  A Distributed Denial of Service (DDoS) attack floods the bank's online
+  banking portal with millions of bogus requests, crashing the servers.
+  Legitimate customers cannot access their accounts or perform transfers.
+
+
+<strong>(c) Caesar Cipher — Key k = 13 (ROT13)</strong>
+
+Plaintext: "This exam is the best exams I have ever written under the
+            invigilation of Dr Emmanuel Antwi Boasiako"
+
+Substitution table (letters only; spaces &amp; punctuation unchanged):
+A↔N  B↔O  C↔P  D↔Q  E↔R  F↔S  G↔T  H↔U  I↔V  J↔W  K↔X  L↔Y  M↔Z
+N↔A  O↔B  P↔C  Q↔D  R↔E  S↔F  T↔G  U↔H  V↔I  W↔J  X↔K  Y↔L  Z↔M
+(k=13 is self-inverse: ROT13 applied twice returns the original)
+
+Step-by-step (word by word, case preserved):
+
+  Word          Plaintext   →  Ciphertext
+  ──────────    ─────────      ──────────
+  This          T h i s    →  G u v f
+  exam          e x a m    →  r k n z
+  is            i s        →  v f
+  the           t h e      →  g u r
+  best          b e s t    →  o r f g
+  exams         e x a m s  →  r k n z f
+  I             I          →  V
+  have          h a v e    →  u n i r
+  ever          e v e r    →  r i r e
+  written       w r i t t e n →  j e v g g r a
+  under         u n d e r  →  h a q r e
+  the           t h e      →  g u r
+  invigilation  i n v i g i l a t i o n → v a i v t v y n g v b a
+  of            o f        →  b s
+  Dr            D r        →  Q e
+  Emmanuel      E m m a n u e l → R z z n a h r y
+  Antwi         A n t w i  →  N a g j v
+  Boasiako      B o a s i a k o → O b n f v n x b
+
+Final Ciphertext:
+"Guvf rknz vf gur orfg rknzf V unir rire jevggra haqre gur vaivtyngvba
+ bs Qe Rzznahry Nagjv Obasvaxb"</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- WQ B2 -->
+  <div class="wq-card" id="wqb2">
+    <div class="wq-header" onclick="toggleWQ('wqb2')">
+      <div class="wq-num">B2</div>
+      <div class="wq-header-text"><h3>Symmetric Cryptography, Caesar Cipher (k=15) &amp; Policy/Liability</h3><p>SECTION B · 20 MARKS</p></div>
+      <div class="wq-chevron">▾</div>
+    </div>
+    <div class="wq-body">
+      <div class="wq-question">
+        <strong>(a)</strong> With the aid of a diagram, explain the concept of symmetric cryptography and give two examples of symmetric encryption algorithms. <em>(10 marks)</em><br><br>
+        <strong>(b)</strong> Consider a shift cipher (Caesar cipher) for the English alphabet using a key <strong>k = 15</strong>. Encrypt the following sentence:<br>
+        <em>"This exam is the best exams I have ever written under the invigilation of Dr Emmanuel Antwi Boasiako"</em><br>
+        Show all steps and clearly present your final ciphertext.<br><br>
+        <strong>(c)</strong> Laws and ethics in Information Security are very important. As the Information Security Expert of your company, you are required to advise management before the company develops a security policy for employees.<br>
+        &nbsp;&nbsp;&nbsp;<strong>i.</strong> What is a policy? How is a policy different from a law? <em>(5 marks)</em><br>
+        &nbsp;&nbsp;&nbsp;<strong>ii.</strong> Explain the concept of Liability to the managers of your company. <em>(5 marks)</em>
+      </div>
+      <div class="wq-hint">💡 <div><strong>Hint:</strong> For (b), build a shift table for k=15 (A→P, B→Q … K→Z, L→A …). For (c.i), think about who creates and enforces a policy vs a law, and what consequences follow from each. For (c.ii), think about legal responsibility when an organisation fails to protect data.</div></div>
+      <button class="reveal-btn" onclick="toggleSolution('wqb2-sol', this)">▶ Reveal Model Solution</button>
+      <div class="solution-box" id="wqb2-sol">
+        <div class="sol-label">Model Solution</div>
+        <pre><strong>(a) Symmetric (Secret-Key) Cryptography</strong>
+
+Definition:
+Symmetric cryptography uses a SINGLE shared secret key for BOTH encryption
+and decryption. The same key must be securely distributed to all authorised
+parties before communication can take place.
+
+Diagram:
+
+  Sender (Alice)                                  Receiver (Bob)
+  ─────────────                                   ─────────────
+  Plaintext ──► [Encrypt with       ──► Ciphertext ──► [Decrypt with       ──► Plaintext
+                 Shared Secret Key]                     Shared Secret Key]
+
+  Secure Key Exchange (must happen beforehand):
+  ┌──────────────────────────────────────────────────────┐
+  │          ← ← ←  Shared Secret Key  → → →            │
+  │  Alice                                       Bob     │
+  │  (holds key)                           (holds key)   │
+  └──────────────────────────────────────────────────────┘
+
+How it works:
+1. Alice and Bob agree on a shared secret key (via a secure channel).
+2. Alice encrypts plaintext using the shared key → produces ciphertext.
+3. Bob decrypts the ciphertext using the same shared key → recovers plaintext.
+4. Anyone who intercepts the ciphertext without the key cannot read it.
+
+Key Properties:
+• Much FASTER than asymmetric encryption — suitable for bulk data.
+• Key distribution is a challenge: the shared key must be exchanged securely.
+• Both parties must trust each other and protect the key equally.
+• Does not provide non-repudiation (either party could have encrypted it).
+
+Comparison with Asymmetric:
+• Symmetric: 1 key (shared), fast, key distribution problem.
+• Asymmetric: 2 keys (public + private), slow, no distribution problem.
+In practice, asymmetric cryptography is used to securely exchange a
+symmetric session key (hybrid encryption — e.g., TLS).
+
+Two Examples of Symmetric Encryption Algorithms:
+1. AES (Advanced Encryption Standard): Block cipher operating on 128-bit
+   blocks with key sizes of 128, 192, or 256 bits. NIST-standardised in
+   2001. The dominant symmetric algorithm worldwide; used in TLS, disk
+   encryption (BitLocker, FileVault), and Wi-Fi (WPA2/WPA3).
+2. DES (Data Encryption Standard): Block cipher with a 56-bit key,
+   standardised in 1977. Now considered insecure due to its short key
+   length (broken by brute-force in 22 hours in 1999). Superseded by
+   3DES (Triple DES) and eventually AES.
+
+
+<strong>(b) Caesar Cipher — Key k = 15</strong>
+
+Plaintext: "This exam is the best exams I have ever written under the
+            invigilation of Dr Emmanuel Antwi Boasiako"
+
+Substitution table (letters only; spaces &amp; punctuation unchanged):
+A→P  B→Q  C→R  D→S  E→T  F→U  G→V  H→W  I→X  J→Y  K→Z  L→A  M→B
+N→C  O→D  P→E  Q→F  R→G  S→H  T→I  U→J  V→K  W→L  X→M  Y→N  Z→O
+
+Formula: C = (P + 15) mod 26  where A=0, B=1, …, Z=25
+
+Step-by-step (word by word, case preserved):
+
+  Word          Plaintext      →  Ciphertext
+  ──────────    ─────────         ──────────
+  This          T h i s       →  I w x h
+  exam          e x a m       →  t m p b
+  is            i s           →  x h
+  the           t h e         →  i w t
+  best          b e s t       →  q t h i
+  exams         e x a m s     →  t m p b h
+  I             I             →  X
+  have          h a v e       →  w p k t
+  ever          e v e r       →  t k t g
+  written       w r i t t e n →  l g x i i t c
+  under         u n d e r     →  j c s t g
+  the           t h e         →  i w t
+  invigilation  i n v i g i l a t i o n → x c k x v x a p i x d c
+  of            o f           →  d u
+  Dr            D r           →  S g
+  Emmanuel      E m m a n u e l → T b b p c j t a
+  Antwi         A n t w i     →  P c i l x
+  Boasiako      B o a s i a k o → Q d p h x p z d
+
+Key letter calculations (selected examples):
+  T(19) → (19+15) mod 26 = 34 mod 26 = 8  → I
+  x(23) → (23+15) mod 26 = 38 mod 26 = 12 → m
+  l(11) → (11+15) mod 26 = 26 mod 26 = 0  → a
+  n(13) → (13+15) mod 26 = 28 mod 26 = 2  → c
+  o(14) → (14+15) mod 26 = 29 mod 26 = 3  → d
+
+Final Ciphertext:
+"Iwxh tmpb xh iwt qthi tmpbh X wpkt tktg lgxiitc jcstg iwt xckxvxapixdc
+ du Sg Tbbpcjta Pcilx Qdphxpzd"
+
+
+<strong>(c.i) Policy vs Law</strong>
+
+POLICY:
+A policy is a formal document created by an organisation (e.g. a company,
+government agency, or institution) that establishes rules, guidelines,
+standards, and expected behaviours for individuals within that organisation.
+Policies are internally created, communicated, and enforced.
+
+Example: "All employees must use strong passwords and change them every
+90 days" — this is an organisational security policy.
+
+LAW:
+A law is a rule enacted by a recognised governing body (legislature or
+parliament) with jurisdiction over a geographic area or sector. Laws apply
+to all persons and organisations within that jurisdiction, regardless of
+their internal policies.
+
+Example: Ghana's Data Protection Act 2012 (Act 843) legally requires
+organisations to process personal data lawfully and protect it appropriately.
+
+Key Differences:
+
+  Dimension        Policy                    Law
+  ───────────────  ────────────────────────  ─────────────────────────────
+  Created by       Organisation internally   Government / legislature
+  Applies to       Members of organisation   Everyone in the jurisdiction
+  Enforcement      HR / management action    Courts, regulators, police
+  Consequences     Disciplinary / dismissal  Fines, prosecution, imprisonment
+  Binding nature   As a condition of work    Mandatory regardless of consent
+
+In summary: a policy is voluntary in the sense that employees agree to it
+as a condition of employment; a law is mandatory and cannot be opted out of.
+Both can coexist — a company policy may exceed the minimum standard set
+by law.
+
+
+<strong>(c.ii) Liability in Information Security</strong>
+
+Definition:
+Liability is the LEGAL RESPONSIBILITY of an individual or organisation to
+compensate for harm, loss, or damage caused to another party as a result
+of an action, inaction, or failure to exercise reasonable care.
+
+In the context of information security, an organisation may be held liable
+when it fails to adequately protect the sensitive data entrusted to it,
+resulting in harm to affected parties (customers, employees, or partners).
+
+Types Relevant to Information Security:
+
+1. Negligence-Based Liability:
+   The organisation failed to implement a reasonable standard of care.
+   Example: A bank stores customer passwords in plaintext. A breach
+   exposes them. The bank is liable because any reasonably competent
+   organisation would have hashed passwords.
+
+2. Strict Liability:
+   Liability applies regardless of intent or fault, often imposed by
+   statute. Example: Data protection laws (e.g., GDPR, Ghana's Data
+   Protection Act) impose liability for breaches of personal data even
+   if the organisation acted in good faith.
+
+3. Vicarious Liability:
+   An organisation is responsible for the actions of its employees.
+   Example: If an employee negligently emails confidential records to
+   the wrong recipient, the organisation — not just the employee —
+   may be held liable.
+
+Practical Implications for Management:
+• Implement documented security policies and enforce them.
+• Conduct regular risk assessments and close identified gaps.
+• Train employees — ignorance is not a legal defence.
+• Maintain audit trails to demonstrate due diligence.
+• Obtain cyber liability insurance as a risk transfer mechanism.
+• Understand applicable legislation (Data Protection Act, Computer
+  Crime Act) to ensure compliance and minimise legal exposure.</pre>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end tab-written -->
 
 
@@ -1804,7 +2215,7 @@ const BANK = [
 // ══════════════════════════════════════════════════
 let currentQuiz = [];
 let userAnswers = {};
-let submitted = false;
+let liveCorrect = 0;
 
 function startQuiz() {
   const topic = document.getElementById('mcq-topic').value;
@@ -1825,7 +2236,7 @@ function startQuiz() {
   const shuffled = pool.sort(() => Math.random() - 0.5);
   currentQuiz = shuffled.slice(0, Math.min(50, shuffled.length));
   userAnswers = {};
-  submitted = false;
+  liveCorrect = 0;
 
   document.getElementById('score-banner').classList.remove('show');
   renderQuiz();
@@ -1884,74 +2295,55 @@ function renderQuiz() {
 }
 
 function selectAnswer(qIdx, letter) {
-  if (submitted) return;
+  if (userAnswers[qIdx] !== undefined) return; // already answered
   userAnswers[qIdx] = letter;
 
-  // Update button styles
+  const q = currentQuiz[qIdx];
+  const isCorrect = letter === q.a;
+  if (isCorrect) liveCorrect++;
+
   const letters = ['A','B','C','D'];
   letters.forEach(l => {
     const btn = document.getElementById(`opt-${qIdx}-${l}`);
-    if (btn) {
-      btn.classList.remove('selected');
-      if (l === letter) btn.classList.add('selected');
-    }
+    if (!btn) return;
+    btn.classList.remove('selected');
+    btn.classList.add('disabled');
+    if (l === q.a) btn.classList.add('correct-ans');
+    else if (l === letter && !isCorrect) btn.classList.add('wrong-ans');
   });
+
+  const card = document.getElementById(`qcard-${qIdx}`);
+  if (card) card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const expDiv = document.getElementById(`exp-${qIdx}`);
+  if (expDiv) {
+    expDiv.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect.'} Answer: ${q.a})</strong> ${q.e}`;
+    expDiv.style.borderLeftColor = isCorrect ? 'var(--green)' : 'var(--red)';
+    expDiv.classList.add('show');
+  }
 
   updateAnsweredCount();
   updateProgress();
+
+  // Show final score when all answered
+  if (Object.keys(userAnswers).length === currentQuiz.length) {
+    showScore(liveCorrect, currentQuiz.length);
+    document.getElementById('submit-row').style.display = 'none';
+    const fill = document.getElementById('pfill');
+    if (fill) fill.style.width = '100%';
+  }
 }
 
 function updateAnsweredCount() {
-  const cnt = Object.keys(userAnswers).length;
+  const answered = Object.keys(userAnswers).length;
   const btn = document.getElementById('answered-count-btn');
-  if (btn) btn.textContent = `${cnt} / ${currentQuiz.length} answered`;
+  if (btn) btn.textContent = `${liveCorrect} correct · ${answered - liveCorrect} wrong · ${currentQuiz.length - answered} left`;
 }
 
 function updateProgress() {
   const pct = (Object.keys(userAnswers).length / currentQuiz.length) * 100;
   const fill = document.getElementById('pfill');
   if (fill) fill.style.width = pct + '%';
-}
-
-function submitQuiz() {
-  if (Object.keys(userAnswers).length < currentQuiz.length) {
-    if (!confirm(`You've answered ${Object.keys(userAnswers).length} of ${currentQuiz.length} questions. Submit anyway?`)) return;
-  }
-  submitted = true;
-
-  let correct = 0;
-  currentQuiz.forEach((q, idx) => {
-    const card = document.getElementById(`qcard-${idx}`);
-    const expDiv = document.getElementById(`exp-${idx}`);
-    const userAns = userAnswers[idx];
-    const isCorrect = userAns === q.a;
-    if (isCorrect) correct++;
-
-    const letters = ['A','B','C','D'];
-    letters.forEach(l => {
-      const btn = document.getElementById(`opt-${idx}-${l}`);
-      if (!btn) return;
-      btn.classList.remove('selected');
-      btn.classList.add('disabled');
-      if (l === q.a) btn.classList.add('correct-ans');
-      else if (l === userAns && !isCorrect) btn.classList.add('wrong-ans');
-    });
-
-    if (card) {
-      card.classList.remove('correct','wrong');
-      card.classList.add(isCorrect ? 'correct' : 'wrong');
-    }
-    if (expDiv) {
-      expDiv.innerHTML = `<strong>Correct Answer: ${q.a})</strong> ${q.e}`;
-      expDiv.classList.add('show');
-    }
-  });
-
-  // Show score
-  showScore(correct, currentQuiz.length);
-  document.getElementById('submit-row').style.display = 'none';
-  const fill = document.getElementById('pfill');
-  if (fill) fill.style.width = '100%';
 }
 
 function showScore(correct, total) {
@@ -1974,6 +2366,18 @@ function showScore(correct, total) {
 function scrollToTop() {
   document.getElementById('tab-mcq').scrollIntoView({ behavior: 'smooth' });
 }
+
+// ── SCROLL-TO-TOP BUTTON ────────────────────────────────
+window.addEventListener('scroll', function () {
+  const btn = document.getElementById('scroll-top-btn');
+  if (window.scrollY > 100) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+}, { passive: true });
 </script>
+
+<button id="scroll-top-btn" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8679;</button>
 </body>
 </html>
